@@ -175,7 +175,6 @@ class _PageState extends State<Page> {
             ValueListenableBuilder(
               valueListenable: _currentPageIndex,
               builder: (context, index, _) => Sidebar(
-                ui: ui,
                 onAvatarTap: _onAvatarTapped,
                 avatar: ListenableBuilder(
                   listenable: loginInfoNotifier,
