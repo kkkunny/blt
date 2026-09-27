@@ -1,5 +1,5 @@
-import 'package:bilitv/utils/format.dart' show fromVideoDurationString;
-import 'package:bilitv/utils/json.dart';
+import 'package:blt/utils/format.dart' show fromVideoDurationString;
+import 'package:blt/utils/json.dart';
 
 enum MediaType {
   unknown,

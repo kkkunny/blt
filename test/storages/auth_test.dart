@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bilitv/storages/auth.dart';
+import 'package:blt/storages/auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

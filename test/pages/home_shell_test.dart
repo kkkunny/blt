@@ -1,5 +1,5 @@
-import 'package:bilitv/pages/pages.dart' as app;
-import 'package:bilitv/storages/auth.dart';
+import 'package:blt/pages/pages.dart' as app;
+import 'package:blt/storages/auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/page_test_env.dart';

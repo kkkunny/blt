@@ -1,5 +1,5 @@
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/pink_style.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/pink_style.dart';
 import 'package:flutter/material.dart';
 
 Widget buildLoadingStyle1() {

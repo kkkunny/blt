@@ -1,6 +1,6 @@
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/utils/ui_scale.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/utils/ui_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

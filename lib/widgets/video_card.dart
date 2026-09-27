@@ -1,11 +1,11 @@
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/icons/iconfont.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/utils/format.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/pink_style.dart';
-import 'package:bilitv/widgets/text.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/icons/iconfont.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/utils/format.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/pink_style.dart';
+import 'package:blt/widgets/text.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 

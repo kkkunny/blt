@@ -1,5 +1,5 @@
-import 'package:bilitv/pages/search.dart';
-import 'package:bilitv/storages/auth.dart';
+import 'package:blt/pages/search.dart';
+import 'package:blt/storages/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

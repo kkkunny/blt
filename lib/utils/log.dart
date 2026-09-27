@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
-const _logFileName = 'bilitv.log';
+const _logFileName = 'blt.log';
 const _maxLogFileBytes = 2 * 1024 * 1024; // 单文件 2MB
 const _maxLogBackups = 3; // 保留 3 个历史文件
 

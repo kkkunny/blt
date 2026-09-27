@@ -1,5 +1,5 @@
-import 'package:bilitv/models/video.dart' show MediaCardInfo, MediaType;
-import 'package:bilitv/utils/json.dart';
+import 'package:blt/models/video.dart' show MediaCardInfo, MediaType;
+import 'package:blt/utils/json.dart';
 
 import 'client.dart';
 

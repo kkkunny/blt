@@ -1,9 +1,9 @@
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/models/pbs/dm.pb.dart';
-import 'package:bilitv/models/video.dart' show Video;
-import 'package:bilitv/storages/auth.dart' show loadCookie;
-import 'package:bilitv/utils/json.dart';
-import 'package:bilitv/utils/log.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/models/pbs/dm.pb.dart';
+import 'package:blt/models/video.dart' show Video;
+import 'package:blt/storages/auth.dart' show loadCookie;
+import 'package:blt/utils/json.dart';
+import 'package:blt/utils/log.dart';
 import 'package:dio/dio.dart';
 
 import 'client.dart';

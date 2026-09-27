@@ -1,4 +1,4 @@
-import 'package:bilitv/main.dart';
+import 'package:blt/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 

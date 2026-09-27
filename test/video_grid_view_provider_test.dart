@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 MediaCardInfo _video(int avid) => MediaCardInfo(

@@ -1,4 +1,4 @@
-import 'package:bilitv/utils/comparable.dart';
+import 'package:blt/utils/comparable.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

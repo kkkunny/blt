@@ -1,4 +1,4 @@
-import 'package:bilitv/utils/ui_scale.dart';
+import 'package:blt/utils/ui_scale.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 

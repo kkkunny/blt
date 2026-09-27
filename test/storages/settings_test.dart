@@ -1,4 +1,4 @@
-import 'package:bilitv/storages/settings.dart';
+import 'package:blt/storages/settings.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart'
     hide AnimatedInfiniteScrollView;
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/animated_infinite_scrollview.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/video_card.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/animated_infinite_scrollview.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/video_card.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

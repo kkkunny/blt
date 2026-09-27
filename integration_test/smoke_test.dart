@@ -5,12 +5,12 @@
 
 import 'dart:typed_data';
 
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/main.dart' as app;
-import 'package:bilitv/models/pbs/dm.pb.dart';
-import 'package:bilitv/pages/video_player.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/widgets/video_card.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/main.dart' as app;
+import 'package:blt/models/pbs/dm.pb.dart';
+import 'package:blt/pages/video_player.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/widgets/video_card.dart';
 import 'package:dio/dio.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/utils/json.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/utils/json.dart';
 
 // 搜索视频
 Future<List<MediaCardInfo>> searchVideos(String keyword, {int page = 1}) async {

@@ -1,4 +1,4 @@
-# 哔哩哔哩TV
+# BLT
 
 一款由flutter实现的第三方哔哩哔哩客户端 for Android TV
 
@@ -6,7 +6,7 @@
 
 **优先完善基础功能，暂无稳定性和性能保障！**
 
-![首页](https://github.com/kkkunny/bilitv/raw/refs/heads/master/doc/screenshot.webp)
+![首页](https://github.com/kkkunny/blt/raw/refs/heads/master/doc/screenshot.webp)
 
 # 致谢
 

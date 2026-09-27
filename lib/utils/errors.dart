@@ -3,7 +3,7 @@
 // 页面只通过 showAppError 展示错误，文案与分类都在这里集中处理，
 // 避免各页面重复 `e is BilibiliError ? e.message : '未知的错误'` 这类判断。
 
-import 'package:bilitv/apis/bilibili/error.dart';
+import 'package:blt/apis/bilibili/error.dart';
 import 'package:dio/dio.dart';
 
 // 错误的呈现强度：预期内的问题轻提示，预期外的问题重提示

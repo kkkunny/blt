@@ -1,6 +1,6 @@
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/apis/bilibili/recommend.dart';
-import 'package:bilitv/models/video.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/apis/bilibili/recommend.dart';
+import 'package:blt/models/video.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';

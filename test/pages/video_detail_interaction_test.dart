@@ -1,8 +1,8 @@
-import 'package:bilitv/apis/bilibili/media.dart' show ArchiveRelation;
-import 'package:bilitv/icons/iconfont.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/pages/video_detail.dart';
-import 'package:bilitv/storages/auth.dart';
+import 'package:blt/apis/bilibili/media.dart' show ArchiveRelation;
+import 'package:blt/icons/iconfont.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/pages/video_detail.dart';
+import 'package:blt/storages/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';

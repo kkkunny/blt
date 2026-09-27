@@ -1,6 +1,6 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/utils/ui_scale.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/utils/ui_scale.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

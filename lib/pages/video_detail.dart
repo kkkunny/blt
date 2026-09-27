@@ -1,31 +1,31 @@
-import 'package:bilitv/apis/bilibili/media.dart'
+import 'package:blt/apis/bilibili/media.dart'
     show getVideoInfo, getArchiveRelation, ArchiveRelation, likeMedia;
-import 'package:bilitv/apis/bilibili/recommend.dart' show fetchRelatedVideos;
-import 'package:bilitv/apis/bilibili/toview.dart';
-import 'package:bilitv/apis/bilibili/user.dart'
+import 'package:blt/apis/bilibili/recommend.dart' show fetchRelatedVideos;
+import 'package:blt/apis/bilibili/toview.dart';
+import 'package:blt/apis/bilibili/user.dart'
     show
         UserRelation,
         getUserRelation,
         getUserFollowerCount,
         modifyUserRelation;
-import 'package:bilitv/consts/bilibili.dart' show coverSizeRatio;
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/consts/settings.dart';
-import 'package:bilitv/icons/iconfont.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/pages/video_player.dart';
-import 'package:bilitv/storages/auth.dart' show loginInfoNotifier;
-import 'package:bilitv/storages/settings.dart';
-import 'package:bilitv/utils/format.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/pink_style.dart';
-import 'package:bilitv/widgets/scroll_text.dart';
-import 'package:bilitv/widgets/text.dart';
-import 'package:bilitv/widgets/tooltip.dart';
-import 'package:bilitv/widgets/video_card.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/consts/bilibili.dart' show coverSizeRatio;
+import 'package:blt/consts/color.dart';
+import 'package:blt/consts/settings.dart';
+import 'package:blt/icons/iconfont.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/pages/video_player.dart';
+import 'package:blt/storages/auth.dart' show loginInfoNotifier;
+import 'package:blt/storages/settings.dart';
+import 'package:blt/utils/format.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/pink_style.dart';
+import 'package:blt/widgets/scroll_text.dart';
+import 'package:blt/widgets/text.dart';
+import 'package:blt/widgets/tooltip.dart';
+import 'package:blt/widgets/video_card.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

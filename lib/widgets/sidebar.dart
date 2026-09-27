@@ -1,5 +1,5 @@
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/widgets/pink_style.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/widgets/pink_style.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 

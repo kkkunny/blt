@@ -1,6 +1,6 @@
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/tooltip.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/tooltip.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,21 +1,21 @@
 import 'dart:async';
 
-import 'package:bilitv/apis/bilibili/client.dart' show bilibiliHttpClient;
-import 'package:bilitv/apis/bilibili/history.dart';
-import 'package:bilitv/apis/bilibili/media.dart'
+import 'package:blt/apis/bilibili/client.dart' show bilibiliHttpClient;
+import 'package:blt/apis/bilibili/history.dart';
+import 'package:blt/apis/bilibili/media.dart'
     show getVideoPlayURL, GetVideoPlayURLResponse, Quality, DashData;
-import 'package:bilitv/consts/settings.dart';
-import 'package:bilitv/icons/iconfont.dart';
-import 'package:bilitv/models/video.dart' as model;
-import 'package:bilitv/pages/setting.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/storages/settings.dart';
-import 'package:bilitv/utils/stream.dart';
-import 'package:bilitv/widgets/bilibili_danmaku_wall.dart';
-import 'package:bilitv/widgets/focus_progress_bar.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/player_controls.dart';
-import 'package:bilitv/widgets/tooltip.dart';
+import 'package:blt/consts/settings.dart';
+import 'package:blt/icons/iconfont.dart';
+import 'package:blt/models/video.dart' as model;
+import 'package:blt/pages/setting.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/storages/settings.dart';
+import 'package:blt/utils/stream.dart';
+import 'package:blt/widgets/bilibili_danmaku_wall.dart';
+import 'package:blt/widgets/focus_progress_bar.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/player_controls.dart';
+import 'package:blt/widgets/tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

@@ -1,7 +1,7 @@
-import 'package:bilitv/apis/bilibili/client.dart' show bilibiliHttpClient;
-import 'package:bilitv/consts/assets.dart';
-import 'package:bilitv/consts/bilibili.dart' show coverSizeRatio;
-import 'package:bilitv/utils/log.dart';
+import 'package:blt/apis/bilibili/client.dart' show bilibiliHttpClient;
+import 'package:blt/consts/assets.dart';
+import 'package:blt/consts/bilibili.dart' show coverSizeRatio;
+import 'package:blt/utils/log.dart';
 import 'package:cached_network_image/cached_network_image.dart'
     show
         CachedNetworkImage,

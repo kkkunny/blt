@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bilitv/utils/stream.dart';
+import 'package:blt/utils/stream.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

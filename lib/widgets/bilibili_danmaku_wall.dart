@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:bilitv/apis/bilibili/media.dart';
-import 'package:bilitv/consts/bilibili.dart';
-import 'package:bilitv/models/pbs/dm.pb.dart';
-import 'package:bilitv/storages/settings.dart';
-import 'package:bilitv/utils/ui_scale.dart';
+import 'package:blt/apis/bilibili/media.dart';
+import 'package:blt/consts/bilibili.dart';
+import 'package:blt/models/pbs/dm.pb.dart';
+import 'package:blt/storages/settings.dart';
+import 'package:blt/utils/ui_scale.dart';
 import 'package:canvas_danmaku/canvas_danmaku.dart';
 import 'package:flutter/material.dart';
 

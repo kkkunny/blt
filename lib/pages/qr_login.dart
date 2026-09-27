@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:bilitv/apis/bilibili/auth.dart';
-import 'package:bilitv/apis/bilibili/user.dart';
-import 'package:bilitv/storages/auth.dart'
+import 'package:blt/apis/bilibili/auth.dart';
+import 'package:blt/apis/bilibili/user.dart';
+import 'package:blt/storages/auth.dart'
     show saveCookie, loginInfoNotifier, LoginInfo;
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/pink_style.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/pink_style.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';

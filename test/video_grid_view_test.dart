@@ -1,4 +1,4 @@
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 

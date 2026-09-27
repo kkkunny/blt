@@ -1,5 +1,5 @@
-name: bilitv
-description: "一个面向TV端的BiliBili客户端"
+name: blt
+description: "一个面向 Android TV 的第三方哔哩哔哩客户端（非官方）"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

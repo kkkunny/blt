@@ -1,6 +1,6 @@
-import 'package:bilitv/consts/settings.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/player_controls.dart';
+import 'package:blt/consts/settings.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/player_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

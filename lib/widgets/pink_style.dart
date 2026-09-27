@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:bilitv/consts/color.dart';
+import 'package:blt/consts/color.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 
