@@ -1,7 +1,7 @@
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/pink_style.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/pink_style.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -261,8 +261,17 @@ class PlayerTitleBar extends StatelessWidget {
   }
 }
 
-// 底栏普通控件（图标 + 名称 + 当前值），焦点时图标外框高亮
+// 底栏普通控件（图标 + 名称 + 当前值），焦点框包住整块内容（含标题与副标题）。
+//
+// 图标槽与副标题槽固定高度，保证「上一集/下一集/更多设置」这类没有副标题的
+// 按钮与其它按钮等高：Row 居中排列时图标、标题、副标题才能逐行对齐。
 class PlayerControlButton extends StatelessWidget {
+  /// 图标槽高度（1080p 设计基准）：按上一集/下一集的 58 图标 + 10 预留
+  static const double _iconSlotHeight = 68;
+
+  /// 副标题槽高度（1080p 设计基准）：无当前值时也占位
+  static const double _valueSlotHeight = 32;
+
   final PlayerBarAction action;
   final FocusNode? focusNode;
 
@@ -277,62 +286,57 @@ class PlayerControlButton extends StatelessWidget {
       focusNode: focusNode,
       enabled: action.enabled,
       onSelect: action.onSelect,
-      builder: (context, focused) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10 * ui, vertical: 6 * ui),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              width: iconSize + 24 * ui,
-              height: iconSize + 10 * ui,
-              decoration: BoxDecoration(
-                color: focused
-                    ? biliPink.withValues(alpha: 0.18)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(14 * ui),
-                border: Border.all(
-                  color: focused ? biliPink : Colors.transparent,
-                  width: context.border(3),
+      builder: (context, focused) => buildPinkFocusEffect(
+        ui: ui,
+        radius: 16 * ui,
+        isFocused: focused,
+        borderWidth: 3 * ui,
+        focusedBackgroundColor: biliPink.withValues(alpha: 0.16),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14 * ui, vertical: 8 * ui),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: _iconSlotHeight * ui,
+                child: Center(
+                  child: Icon(action.icon, size: iconSize, color: mainColor),
                 ),
-                boxShadow: focused
-                    ? [
-                        BoxShadow(
-                          color: biliPink.withValues(alpha: 0.55),
-                          blurRadius: 18 * ui,
-                          spreadRadius: 2 * ui,
-                        ),
-                      ]
-                    : null,
               ),
-              child: Icon(action.icon, size: iconSize, color: mainColor),
-            ),
-            SizedBox(height: 8 * ui),
-            Text(
-              action.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 28 * ui,
-                fontWeight: FontWeight.w500,
-                color: mainColor,
-              ),
-            ),
-            if (action.value != null) ...[
-              SizedBox(height: 4 * ui),
+              SizedBox(height: 8 * ui),
               Text(
-                action.value!,
+                action.label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 24 * ui,
-                  color: action.enabled
-                      ? Colors.white.withValues(alpha: 0.85)
-                      : Colors.white24,
+                  fontSize: 28 * ui,
+                  fontWeight: FontWeight.w500,
+                  color: mainColor,
                 ),
               ),
+              SizedBox(height: 4 * ui),
+              SizedBox(
+                height: _valueSlotHeight * ui,
+                child: action.value == null
+                    ? null
+                    : Center(
+                        child: Text(
+                          action.value!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 24 * ui,
+                            color: !action.enabled
+                                ? Colors.white24
+                                : focused
+                                ? Colors.white
+                                : Colors.white.withValues(alpha: 0.85),
+                          ),
+                        ),
+                      ),
+              ),
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -735,31 +739,20 @@ class _PlayerControlLayerState extends State<PlayerControlLayer> {
                     ),
                   ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: PlayerTitleBar(
-                        title: widget.title,
-                        uploader: widget.uploader,
-                        avatar: widget.avatar,
-                      ),
-                    ),
-                    // 设置面板占据剩余高度（下边栏以上）
-                    if (panelVisible)
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          0,
-                          28 * ui,
-                          40 * ui,
-                          12 * ui,
-                        ),
-                        child: PlayerSettingsPanel(
-                          children: _buildPanelRows(ui),
-                        ),
-                      ),
-                  ],
+                // 标题始终按全宽排版：设置面板是覆盖层，不挤压标题的宽度与行数
+                PlayerTitleBar(
+                  title: widget.title,
+                  uploader: widget.uploader,
+                  avatar: widget.avatar,
                 ),
+                // 设置面板覆盖在标题与画面上方（占据下边栏以上的右侧区域）
+                if (panelVisible)
+                  Positioned(
+                    top: 28 * ui,
+                    right: 40 * ui,
+                    bottom: 12 * ui,
+                    child: PlayerSettingsPanel(children: _buildPanelRows(ui)),
+                  ),
               ],
             ),
           ),

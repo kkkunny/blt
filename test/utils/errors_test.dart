@@ -1,5 +1,5 @@
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/utils/errors.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/utils/errors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 

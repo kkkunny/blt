@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bilitv/utils/log.dart';
+import 'package:blt/utils/log.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 
@@ -8,7 +8,7 @@ void main() {
   late Directory tempDir;
 
   setUp(() {
-    tempDir = Directory.systemTemp.createTempSync('bilitv_log_test');
+    tempDir = Directory.systemTemp.createTempSync('blt_log_test');
   });
 
   tearDown(() {
@@ -45,7 +45,7 @@ void main() {
     // Logger 输出为异步调度，等待事件队列冲刷
     await pumpEventQueue();
 
-    final file = File('${tempDir.path}/bilitv.log');
+    final file = File('${tempDir.path}/blt.log');
     expect(file.existsSync(), true);
     final content = file.readAsStringSync();
     expect(content, contains('[INFO] [test-tag] hello 日志'));

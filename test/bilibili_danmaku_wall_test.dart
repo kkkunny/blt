@@ -1,4 +1,4 @@
-import 'package:bilitv/widgets/bilibili_danmaku_wall.dart';
+import 'package:blt/widgets/bilibili_danmaku_wall.dart';
 import 'package:canvas_danmaku/canvas_danmaku.dart';
 import 'package:flutter_test/flutter_test.dart';
 

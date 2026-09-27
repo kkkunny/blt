@@ -3,9 +3,9 @@ import 'dart:io' show Cookie;
 import 'dart:math';
 
 import 'package:basic_utils/basic_utils.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/utils/json.dart';
-import 'package:bilitv/utils/log.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/utils/json.dart';
+import 'package:blt/utils/log.dart';
 import 'package:convert/convert.dart' as convert;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';

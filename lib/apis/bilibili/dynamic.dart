@@ -1,7 +1,7 @@
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/apis/bilibili/user.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/utils/json.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/apis/bilibili/user.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/utils/json.dart';
 
 import 'client.dart';
 

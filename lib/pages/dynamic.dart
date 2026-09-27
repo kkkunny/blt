@@ -1,20 +1,18 @@
 import 'dart:async';
 
-import 'package:bilitv/apis/bilibili/dynamic.dart';
-import 'package:bilitv/apis/bilibili/toview.dart';
-import 'package:bilitv/apis/bilibili/user.dart' show UserInfo;
-import 'package:bilitv/consts/assets.dart';
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/models/video.dart' show MediaCardInfo;
-import 'package:bilitv/pages/video_detail.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/pink_style.dart';
-import 'package:bilitv/widgets/tooltip.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
-import 'package:dpad/dpad.dart';
+import 'package:blt/apis/bilibili/dynamic.dart';
+import 'package:blt/apis/bilibili/toview.dart';
+import 'package:blt/apis/bilibili/user.dart' show UserInfo;
+import 'package:blt/consts/assets.dart';
+import 'package:blt/models/video.dart' show MediaCardInfo;
+import 'package:blt/pages/video_detail.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/side_panel.dart';
+import 'package:blt/widgets/tooltip.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -127,37 +125,25 @@ class _DynamicPageState extends State<DynamicPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 以1080p为基准缩放整体尺寸
-    final ui = context.ui;
     return Row(
       children: [
-        _buildUpSidebar(ui),
+        _buildUpSidebar(),
         Expanded(child: _buildVideoGrid()),
       ],
     );
   }
 
-  Widget _buildUpSidebar(double ui) {
-    return Container(
-      width: 96 * ui,
-      margin: EdgeInsets.fromLTRB(12 * ui, 12 * ui, 0, 12 * ui),
-      padding: EdgeInsets.symmetric(vertical: 8 * ui, horizontal: 6 * ui),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(20 * ui),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.pink.withValues(alpha: 0.08),
-            blurRadius: 18 * ui,
-            offset: Offset(0, 4 * ui),
-          ),
-        ],
-      ),
-      child: _buildUpListView(ui),
+  // UP 选择列：与主侧边栏共用面板规格，上下 28ui 留白对齐成一列组
+  Widget _buildUpSidebar() {
+    final ui = context.ui;
+    return SidePanel(
+      margin: EdgeInsets.fromLTRB(20 * ui, 28 * ui, 0, 28 * ui),
+      child: _buildUpListView(),
     );
   }
 
-  Widget _buildUpListView(double ui) {
+  Widget _buildUpListView() {
+    final ui = context.ui;
     if (_ups.isEmpty) {
       return const Center(child: SizedBox());
     }
@@ -168,17 +154,25 @@ class _DynamicPageState extends State<DynamicPage> {
         final up = _ups[index];
         final avatar = up.mid <= 0
             ? CircleAvatar(
-                radius: 20 * ui,
+                radius: 28 * ui,
                 child: Image.asset(Images.dynamicAvatar),
               )
-            : BilibiliAvatar(up.avatar, radius: 20 * ui);
-        return _SidebarAvatarItem(
-          ui: ui,
-          selected:
-              (up.mid <= 0 && _selectedMid == null) || _selectedMid == up.mid,
-          onTap: () => _onUpSelected(up.mid),
-          label: up.name,
-          child: avatar,
+            : BilibiliAvatar(up.avatar, radius: 28 * ui);
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 4 * ui),
+          child: Center(
+            child: SidePanelTile(
+              leading: avatar,
+              label: up.name,
+              selected:
+                  (up.mid <= 0 && _selectedMid == null) ||
+                  _selectedMid == up.mid,
+              onTap: () => _onUpSelected(up.mid),
+              height: 112,
+              radius: 28,
+              fontSize: 22,
+            ),
+          ),
         );
       },
     );
@@ -212,60 +206,3 @@ class _DynamicPageState extends State<DynamicPage> {
   }
 }
 
-class _SidebarAvatarItem extends StatelessWidget {
-  final double ui;
-  final Widget child;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _SidebarAvatarItem({
-    required this.ui,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4 * ui),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: DpadFocusable(
-          onSelect: onTap,
-          builder: pinkFocusEffect(ui: ui, radius: 14 * ui),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 6 * ui),
-            decoration: BoxDecoration(
-              gradient: selected ? pinkGradient : null,
-              borderRadius: BorderRadius.circular(14 * ui),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                child,
-                SizedBox(height: 4 * ui),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2 * ui),
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14 * ui,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                      color: selected ? Colors.white : Colors.grey.shade600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

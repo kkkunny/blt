@@ -1,5 +1,5 @@
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/custom_setting_tiles.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/custom_setting_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

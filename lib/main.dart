@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/pages/pages.dart';
-import 'package:bilitv/pages/splash.dart';
-import 'package:bilitv/utils/log.dart';
-import 'package:bilitv/utils/scroll_behavior.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/tooltip.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/pages/pages.dart';
+import 'package:blt/pages/splash.dart';
+import 'package:blt/utils/log.dart';
+import 'package:blt/utils/scroll_behavior.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/tooltip.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart' hide Page;
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -55,7 +55,7 @@ Future<void> main() async {
       await FlutterDisplayMode.setHighRefreshRate();
 
       // 开启app
-      runApp(const BiliTVApp());
+      runApp(const BltApp());
     },
     (error, stack) {
       _log.e('未捕获的异步异常', error: error, stackTrace: stack);
@@ -70,13 +70,13 @@ void _showGlobalFatal() {
   pushTooltipFatal(context, '发生未知错误');
 }
 
-class BiliTVApp extends StatelessWidget {
-  const BiliTVApp({super.key});
+class BltApp extends StatelessWidget {
+  const BltApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: '哔哩哔哩TV',
+      title: 'BLT',
       navigatorKey: navigatorKey,
       theme: ThemeData(
         useMaterial3: true,

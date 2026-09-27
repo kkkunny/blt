@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:bilitv/apis/bilibili/history.dart';
-import 'package:bilitv/consts/assets.dart';
-import 'package:bilitv/models/video.dart' show MediaCardInfo;
-import 'package:bilitv/pages/video_detail.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/tooltip.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/apis/bilibili/history.dart';
+import 'package:blt/consts/assets.dart';
+import 'package:blt/models/video.dart' show MediaCardInfo;
+import 'package:blt/pages/video_detail.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/tooltip.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

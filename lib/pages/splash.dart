@@ -1,8 +1,8 @@
-import 'package:bilitv/apis/bilibili/auth.dart';
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/apis/bilibili/user.dart' show getMySelfInfo;
-import 'package:bilitv/consts/assets.dart';
-import 'package:bilitv/storages/auth.dart';
+import 'package:blt/apis/bilibili/auth.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/apis/bilibili/user.dart' show getMySelfInfo;
+import 'package:blt/consts/assets.dart';
+import 'package:blt/storages/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

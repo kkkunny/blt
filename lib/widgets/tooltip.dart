@@ -1,5 +1,5 @@
-import 'package:bilitv/utils/errors.dart';
-import 'package:bilitv/utils/ui_scale.dart';
+import 'package:blt/utils/errors.dart';
+import 'package:blt/utils/ui_scale.dart';
 import 'package:flutter/material.dart';
 
 void pushTooltipInfo(

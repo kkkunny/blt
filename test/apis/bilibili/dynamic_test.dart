@@ -1,6 +1,6 @@
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/apis/bilibili/dynamic.dart';
-import 'package:bilitv/apis/bilibili/error.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/apis/bilibili/dynamic.dart';
+import 'package:blt/apis/bilibili/error.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,4 +1,4 @@
-import 'package:bilitv/models/video.dart';
+import 'package:blt/models/video.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // 搜索接口的video结果：id字段是aid，不包含cid

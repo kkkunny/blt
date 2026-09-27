@@ -1,7 +1,7 @@
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/storages/auth.dart' show loadCookie;
-import 'package:bilitv/utils/json.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/storages/auth.dart' show loadCookie;
+import 'package:blt/utils/json.dart';
 import 'package:dio/dio.dart' show Headers;
 
 class UserInfo {

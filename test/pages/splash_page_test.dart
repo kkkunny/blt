@@ -1,6 +1,6 @@
-import 'package:bilitv/pages/splash.dart';
-import 'package:bilitv/storages/auth.dart';
-import 'package:bilitv/utils/ui_scale.dart';
+import 'package:blt/pages/splash.dart';
+import 'package:blt/storages/auth.dart';
+import 'package:blt/utils/ui_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';

@@ -1,5 +1,5 @@
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/scroll_text.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/scroll_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

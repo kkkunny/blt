@@ -1,4 +1,4 @@
-import 'package:bilitv/utils/format.dart';
+import 'package:blt/utils/format.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

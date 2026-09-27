@@ -1,12 +1,12 @@
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/apis/bilibili/user.dart';
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/storages/auth.dart'
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/apis/bilibili/user.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/storages/auth.dart'
     show clearCookie, loginInfoNotifier, LoginInfo;
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/cache_future_builder.dart';
-import 'package:bilitv/widgets/pink_style.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/cache_future_builder.dart';
+import 'package:blt/widgets/pink_style.dart';
 import 'package:flutter/material.dart';
 
 class UserInfoPage extends StatelessWidget {

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:bilitv/apis/bilibili/client.dart';
-import 'package:bilitv/apis/bilibili/error.dart';
-import 'package:bilitv/apis/bilibili/media.dart';
-import 'package:bilitv/models/pbs/dm.pb.dart';
+import 'package:blt/apis/bilibili/client.dart';
+import 'package:blt/apis/bilibili/error.dart';
+import 'package:blt/apis/bilibili/media.dart';
+import 'package:blt/models/pbs/dm.pb.dart';
 import 'package:dio/dio.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_test/flutter_test.dart';

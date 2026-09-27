@@ -1,6 +1,6 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/focus_progress_bar.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/focus_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

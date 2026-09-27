@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart'
     hide AnimatedInfiniteScrollView;
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/animated_infinite_scrollview.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/video_card.dart';
+import 'package:blt/consts/color.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/animated_infinite_scrollview.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/video_card.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,6 +52,8 @@ class VideoGridViewProvider {
   bool _disposed = false;
   bool _fetching = false;
   int _generation = 0;
+  // 最近一次发起的是"加载更多"还是首屏，重试时重跑同一次请求
+  bool _lastFetchMore = false;
 
   VideoGridViewProvider({this.initVideos = const [], this.onLoad});
 
@@ -113,6 +115,12 @@ class VideoGridViewProvider {
     await _fetchData(isFetchMore: isFetchMore, generation: _generation);
   }
 
+  // 重试上次失败的请求（首屏/加载更多分开），失败时不清空已有数据
+  Future<void> retry() async {
+    if (_disposed || onLoad == null || _fetching) return;
+    await _fetchData(isFetchMore: _lastFetchMore, generation: _generation);
+  }
+
   @visibleForTesting
   bool get debugRefreshing => _refreshing.value;
 
@@ -126,6 +134,7 @@ class VideoGridViewProvider {
     if (_disposed || onLoad == null) return;
 
     _fetching = true;
+    _lastFetchMore = isFetchMore;
     try {
       _ctl.emitState(const PaginationLoadingState());
 
@@ -160,6 +169,7 @@ class VideoGridView<T> extends StatefulWidget {
   final List<ItemMenuAction> itemMenuActions;
   final Widget? refreshWidget; // 刷新时展示的组件
   final Widget? noItemsWidget; // items为空时展示的组件
+  final bool autoRefresh; // 挂载时是否自动加载首屏（页面自管数据时置 false）
 
   const VideoGridView({
     super.key,
@@ -178,6 +188,7 @@ class VideoGridView<T> extends StatefulWidget {
     this.itemMenuActions = const [],
     this.refreshWidget,
     this.noItemsWidget,
+    this.autoRefresh = true,
   });
 
   @override
@@ -230,7 +241,7 @@ class _VideoGridViewState<T> extends State<VideoGridView<T>> {
   void initState() {
     super.initState();
     _keyboardListenerFocusNode = FocusNode(canRequestFocus: false);
-    widget.provider.refresh();
+    if (widget.autoRefresh) widget.provider.refresh();
   }
 
   @override
@@ -426,7 +437,8 @@ class _VideoGridViewState<T> extends State<VideoGridView<T>> {
                 _itemBuilder(context, index, item),
             primary: widget.shrinkWrap,
             noItemsWidget: widget.noItemsWidget,
-            errorWidget: buildErrorRetryWidget(() => widget.provider.refresh()),
+            // 失败重试重跑失败的那次请求，避免把已加载的多页结果一并清空
+            errorWidget: buildErrorRetryWidget(widget.provider.retry),
             padding:
                 widget.padding ??
                 EdgeInsets.symmetric(

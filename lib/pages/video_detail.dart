@@ -1,31 +1,31 @@
-import 'package:bilitv/apis/bilibili/media.dart'
+import 'package:blt/apis/bilibili/media.dart'
     show getVideoInfo, getArchiveRelation, ArchiveRelation, likeMedia;
-import 'package:bilitv/apis/bilibili/recommend.dart' show fetchRelatedVideos;
-import 'package:bilitv/apis/bilibili/toview.dart';
-import 'package:bilitv/apis/bilibili/user.dart'
+import 'package:blt/apis/bilibili/recommend.dart' show fetchRelatedVideos;
+import 'package:blt/apis/bilibili/toview.dart';
+import 'package:blt/apis/bilibili/user.dart'
     show
         UserRelation,
         getUserRelation,
         getUserFollowerCount,
         modifyUserRelation;
-import 'package:bilitv/consts/bilibili.dart' show coverSizeRatio;
-import 'package:bilitv/consts/color.dart';
-import 'package:bilitv/consts/settings.dart';
-import 'package:bilitv/icons/iconfont.dart';
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/pages/video_player.dart';
-import 'package:bilitv/storages/auth.dart' show loginInfoNotifier;
-import 'package:bilitv/storages/settings.dart';
-import 'package:bilitv/utils/format.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/loading.dart';
-import 'package:bilitv/widgets/pink_style.dart';
-import 'package:bilitv/widgets/scroll_text.dart';
-import 'package:bilitv/widgets/text.dart';
-import 'package:bilitv/widgets/tooltip.dart';
-import 'package:bilitv/widgets/video_card.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/consts/bilibili.dart' show coverSizeRatio;
+import 'package:blt/consts/color.dart';
+import 'package:blt/consts/settings.dart';
+import 'package:blt/icons/iconfont.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/pages/video_player.dart';
+import 'package:blt/storages/auth.dart' show loginInfoNotifier;
+import 'package:blt/storages/settings.dart';
+import 'package:blt/utils/format.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/loading.dart';
+import 'package:blt/widgets/pink_style.dart';
+import 'package:blt/widgets/scroll_text.dart';
+import 'package:blt/widgets/text.dart';
+import 'package:blt/widgets/tooltip.dart';
+import 'package:blt/widgets/video_card.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:dpad/dpad.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -263,6 +263,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
           borderWidth: 3 * ui,
           unfocusedColor: Colors.white,
           backgroundColor: Colors.white,
+          scale: 1.02,
           isFocused: isFocused,
           child: Padding(
             padding: EdgeInsets.all(4 * ui),
@@ -279,9 +280,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     // 播放按钮，选中时高亮
                     LayoutBuilder(
                       builder: (context, constraints) {
-                        final size = (constraints.maxHeight * 0.26).clamp(
-                          40.0,
-                          160.0,
+                        final size = (constraints.maxHeight * 0.28).clamp(
+                          48.0,
+                          200.0,
                         );
                         return Center(
                           child: AnimatedContainer(
@@ -327,8 +328,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           videoDurationString(widget.video.duration),
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 19 * ui,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 22 * ui,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -367,14 +368,14 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: 136 * ui, child: _buildTitle(ui)),
-          const Spacer(flex: 1),
-          SizedBox(height: 54 * ui, child: _buildRelations(ui)),
-          const Spacer(flex: 1),
-          SizedBox(height: 64 * ui, child: _buildDescription(ui)),
-          const Spacer(flex: 2),
-          Divider(height: 2 * ui, color: Colors.black.withValues(alpha: 0.05)),
-          SizedBox(height: 102 * ui, child: _buildOtherInfo(ui)),
+          SizedBox(height: 112 * ui, child: _buildTitle(ui)),
+          SizedBox(height: 14 * ui),
+          SizedBox(height: 58 * ui, child: _buildRelations(ui)),
+          SizedBox(height: 14 * ui),
+          SizedBox(height: 76 * ui, child: _buildDescription(ui)),
+          const Spacer(),
+          Divider(height: 2 * ui, color: Colors.black.withValues(alpha: 0.06)),
+          SizedBox(height: 100 * ui, child: _buildOtherInfo(ui)),
         ],
       ),
     );
@@ -386,7 +387,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
       child: FixedLineAdaptiveText(
         widget.video.title,
         line: 2,
-        lineHeight: 1.35,
+        lineHeight: 1.3,
+        maxFontSize: 40 * ui,
         style: const TextStyle(
           fontWeight: FontWeight.w900,
           color: Colors.black,
@@ -397,56 +399,74 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   }
 
   Widget _buildRelations(double ui) {
+    // 等宽胶囊按钮：横向 6 格，遥控器左右移动即可，宽度稳定不随数字长度跳动
+    Widget stretch(_RelationAction action) => Expanded(child: action);
+
     return ValueListenableBuilder(
       valueListenable: _like,
       builder: (context, like, _) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _RelationAction(
-            ui: ui,
-            icon: Icons.thumb_up_rounded,
-            label: amountString(widget.video.stat.likeCount),
-            color: like ? biliPink : Colors.grey.shade500,
-            onPressed: _onLikeTapped,
+          stretch(
+            _RelationAction(
+              ui: ui,
+              icon: Icons.thumb_up_rounded,
+              label: amountString(widget.video.stat.likeCount),
+              active: like,
+              onPressed: _onLikeTapped,
+            ),
           ),
-          _RelationAction(
-            ui: ui,
-            icon: Icons.thumb_down_rounded,
-            iconScaleX: -1,
-            label: amountString(widget.video.stat.dislikeCount),
-            color: widget.relation.dislike ? biliPink : Colors.grey.shade500,
-            onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+          SizedBox(width: 12 * ui),
+          stretch(
+            _RelationAction(
+              ui: ui,
+              icon: Icons.thumb_down_rounded,
+              iconScaleX: -1,
+              label: amountString(widget.video.stat.dislikeCount),
+              active: widget.relation.dislike,
+              onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+            ),
           ),
-          _RelationAction(
-            ui: ui,
-            iconFont: IconFont.coin,
-            iconScale: 1.1,
-            label: amountString(widget.video.stat.coinCount),
-            color: widget.relation.coin > 0 ? biliPink : Colors.grey.shade500,
-            onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+          SizedBox(width: 12 * ui),
+          stretch(
+            _RelationAction(
+              ui: ui,
+              iconFont: IconFont.coin,
+              iconScale: 1.1,
+              label: amountString(widget.video.stat.coinCount),
+              active: widget.relation.coin > 0,
+              onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+            ),
           ),
-          _RelationAction(
-            ui: ui,
-            icon: Icons.star_rounded,
-            iconScale: 1.3,
-            label: amountString(widget.video.stat.favoriteCount),
-            color: widget.relation.favorite ? biliPink : Colors.grey.shade500,
-            onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+          SizedBox(width: 12 * ui),
+          stretch(
+            _RelationAction(
+              ui: ui,
+              icon: Icons.star_rounded,
+              iconScale: 1.2,
+              label: amountString(widget.video.stat.favoriteCount),
+              active: widget.relation.favorite,
+              onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+            ),
           ),
-          _RelationAction(
-            ui: ui,
-            iconFont: IconFont.playlist,
-            iconScale: 1.1,
-            color: Colors.grey.shade500,
-            onPressed: _onAddToViewTapped,
+          SizedBox(width: 12 * ui),
+          stretch(
+            _RelationAction(
+              ui: ui,
+              iconFont: IconFont.playlist,
+              iconScale: 1.1,
+              onPressed: _onAddToViewTapped,
+            ),
           ),
-          _RelationAction(
-            ui: ui,
-            iconFont: IconFont.share,
-            iconScale: 1.2,
-            label: amountString(widget.video.stat.shareCount),
-            color: Colors.grey.shade500,
-            onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+          SizedBox(width: 12 * ui),
+          stretch(
+            _RelationAction(
+              ui: ui,
+              iconFont: IconFont.share,
+              iconScale: 1.1,
+              label: amountString(widget.video.stat.shareCount),
+              onPressed: () => pushTooltipInfo(context, '暂不支持该功能！'),
+            ),
           ),
         ],
       ),
@@ -505,22 +525,48 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   }
 
   Widget _buildDescription(double ui) {
+    final desc = widget.video.desc.trim();
     return DpadFocusable(
       onSelect: () => showDialog(
         context: context,
-        builder: (context) => _buildCompleteDesc(ui),
+        barrierColor: Colors.black.withValues(alpha: 0.5),
+        barrierDismissible: false,
+        builder: (dialogContext) => _buildCompleteDesc(dialogContext, ui),
       ),
-      builder: pinkFocusEffect(ui: ui, radius: 12 * ui),
+      builder: pinkFocusEffect(
+        ui: ui,
+        radius: 16 * ui,
+        borderWidth: 2.5 * ui,
+        backgroundColor: focusableSurfaceColor,
+        focusedBackgroundColor: Colors.white,
+        scale: 1.02,
+      ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4 * ui),
-        child: FixedLineAdaptiveText(
-          widget.video.desc,
-          line: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: Colors.grey.shade600,
-          ),
+        padding: EdgeInsets.fromLTRB(16 * ui, 6 * ui, 14 * ui, 6 * ui),
+        child: Row(
+          children: [
+            Expanded(
+              child: FixedLineAdaptiveText(
+                desc.isEmpty ? '暂无简介' : desc,
+                line: 2,
+                lineHeight: 1.35,
+                maxFontSize: 24 * ui,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: desc.isEmpty
+                      ? Colors.grey.shade500
+                      : Colors.grey.shade700,
+                ),
+              ),
+            ),
+            SizedBox(width: 10 * ui),
+            Icon(
+              Icons.unfold_more_rounded,
+              size: 26 * ui,
+              color: Colors.grey.shade500,
+            ),
+          ],
         ),
       ),
     );
@@ -557,33 +603,52 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   ],
                 ),
                 SizedBox(height: 6 * ui),
-                ValueListenableBuilder(
-                  valueListenable: _followerCount,
-                  builder: (context, followerCount, _) {
-                    final color = Colors.grey[600];
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(IconFont.fensi, size: 30 * ui, color: color),
-                        SizedBox(width: 6 * ui),
-                        Flexible(
-                          child: Text(
-                            followerCount == null
-                                ? 'UP 主'
-                                : '${amountString(followerCount)}粉丝',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 20 * ui, color: color),
-                          ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: ValueListenableBuilder(
+                        valueListenable: _followerCount,
+                        builder: (context, followerCount, _) {
+                          final color = Colors.grey[600];
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(IconFont.fensi, size: 30 * ui, color: color),
+                              SizedBox(width: 6 * ui),
+                              Text(
+                                followerCount == null
+                                    ? 'UP 主'
+                                    : '${amountString(followerCount)}粉丝',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 20 * ui,
+                                  color: color,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 12 * ui),
+                    Flexible(
+                      child: Text(
+                        '发布于 ${datetimeString(widget.video.publishTime)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 20 * ui,
+                          color: Colors.grey.shade500,
                         ),
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          SizedBox(width: 12 * ui),
+          SizedBox(width: 16 * ui),
           ValueListenableBuilder(
             valueListenable: _following,
             builder: (context, following, _) => _FollowButton(
@@ -592,45 +657,111 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               onPressed: _onFollowTapped,
             ),
           ),
-          SizedBox(width: 20 * ui),
-          Expanded(
-            child: Text(
-              '发布于 ${datetimeString(widget.video.publishTime)}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
-              style: TextStyle(fontSize: 20 * ui, color: Colors.grey.shade500),
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildCompleteDesc(double ui) {
-    return AlertDialog(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20 * ui),
+  Widget _buildCompleteDesc(BuildContext dialogContext, double ui) {
+    final desc = widget.video.desc.trim();
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: 120 * ui,
+        vertical: 60 * ui,
       ),
-      content: SizedBox(
-        width: MediaQuery.of(context).size.width / 2,
-        height: MediaQuery.of(context).size.height / 2,
-        child: ScrollText(
-          widget.video.desc,
-          autofocus: true,
-          style: TextStyle(fontSize: 20 * ui),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 1280 * ui, maxHeight: 760 * ui),
+        padding: EdgeInsets.fromLTRB(28 * ui, 20 * ui, 28 * ui, 20 * ui),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.98),
+          borderRadius: BorderRadius.circular(24 * ui),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.22),
+              blurRadius: 40 * ui,
+              offset: Offset(0, 12 * ui),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8 * ui),
+                  decoration: BoxDecoration(
+                    gradient: pinkGradient,
+                    borderRadius: BorderRadius.circular(12 * ui),
+                  ),
+                  child: Icon(
+                    Icons.description_rounded,
+                    color: Colors.white,
+                    size: 26 * ui,
+                  ),
+                ),
+                SizedBox(width: 12 * ui),
+                Text(
+                  '视频简介',
+                  style: TextStyle(
+                    fontSize: 30 * ui,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black87,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.keyboard_arrow_up_rounded,
+                  size: 26 * ui,
+                  color: Colors.grey.shade400,
+                ),
+                Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 26 * ui,
+                  color: Colors.grey.shade400,
+                ),
+                SizedBox(width: 6 * ui),
+                Text(
+                  '滚动',
+                  style: TextStyle(
+                    fontSize: 20 * ui,
+                    color: Colors.grey.shade500,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 14 * ui),
+            Divider(
+              height: 2 * ui,
+              color: Colors.black.withValues(alpha: 0.06),
+            ),
+            SizedBox(height: 14 * ui),
+            Expanded(
+              child: ScrollText(
+                desc.isEmpty ? '暂无简介' : desc,
+                autofocus: true,
+                style: TextStyle(
+                  fontSize: 24 * ui,
+                  height: 1.65,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            SizedBox(height: 16 * ui),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                PinkButton(
+                  ui: ui,
+                  label: '关闭',
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text(
-            '关闭',
-            style: TextStyle(fontSize: 20 * ui, color: biliPink),
-          ),
-        ),
-      ],
     );
   }
 
@@ -659,7 +790,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                 size: 18 * ui,
               ),
             ),
-            title: '分P',
+            title: '分集',
           ),
           SizedBox(height: 10 * ui),
           Expanded(
@@ -668,6 +799,11 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               builder: (context, cid, _) => ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.video.episodes.length,
+                // 上下留白：避免卡片放大和焦点光晕被列表视口裁掉
+                padding: EdgeInsets.symmetric(
+                  horizontal: 14 * ui,
+                  vertical: 14 * ui,
+                ),
                 separatorBuilder: (context, index) => SizedBox(width: 12 * ui),
                 itemBuilder: (context, index) {
                   final episode = widget.video.episodes[index];
@@ -708,12 +844,11 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               scrollDirection: Axis.horizontal,
               onItemTap: _onVideoTapped,
               crossAxisCount: 1,
-              videoFocusEffect: pinkFocusEffect(
-                ui: ui,
-                radius: 12 * ui,
-                borderWidth: 2 * ui,
+              // 上下留白：避免卡片放大和焦点光晕被列表视口裁掉
+              padding: EdgeInsets.symmetric(
+                horizontal: 14 * ui,
+                vertical: 14 * ui,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 4 * ui),
               noItemsWidget: Center(
                 child: Text(
                   '暂无相关推荐',
@@ -746,7 +881,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   }
 }
 
-// 操作按钮（图标+文案）
+// 操作按钮（等宽胶囊：图标+数字，已选/焦点状态清晰）
 class _RelationAction extends StatelessWidget {
   final double ui;
   final IconData? icon;
@@ -754,7 +889,7 @@ class _RelationAction extends StatelessWidget {
   final double iconScale;
   final double iconScaleX;
   final String? label;
-  final Color color;
+  final bool active; // 语义上的已选（已点赞/投币/收藏）
   final VoidCallback onPressed;
 
   const _RelationAction({
@@ -764,15 +899,16 @@ class _RelationAction extends StatelessWidget {
     this.iconScale = 1,
     this.iconScaleX = 1,
     this.label,
-    required this.color,
+    this.active = false,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    final color = active ? biliPink : Colors.grey.shade600;
     Widget iconWidget = Icon(
       iconFont ?? icon,
-      size: 36 * ui * iconScale,
+      size: 30 * ui * iconScale,
       color: color,
     );
     if (iconScaleX != 1) {
@@ -781,25 +917,41 @@ class _RelationAction extends StatelessWidget {
 
     return DpadFocusable(
       onSelect: onPressed,
-      builder: pinkFocusEffect(ui: ui, radius: 12 * ui),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          iconWidget,
-          if (label != null) ...[
-            SizedBox(width: 8 * ui),
-            Text(
-              label!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 24 * ui,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+      builder: pinkFocusEffect(
+        ui: ui,
+        radius: 16 * ui,
+        borderWidth: 2.5 * ui,
+        backgroundColor: active
+            ? biliPink.withValues(alpha: 0.16)
+            : focusableSurfaceColor,
+        focusedBackgroundColor: Colors.white,
+        scale: 1.05,
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12 * ui),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconWidget,
+            if (label != null) ...[
+              SizedBox(width: 8 * ui),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label!,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 22 * ui,
+                      fontWeight: FontWeight.w600,
+                      color: active ? biliPink : Colors.grey.shade800,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -847,7 +999,7 @@ class _FollowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return DpadFocusable(
       onSelect: onPressed,
-      builder: pinkFocusEffect(ui: ui, radius: 28 * ui),
+      builder: pinkFocusEffect(ui: ui, radius: 28 * ui, scale: 1.05),
       child: Container(
         height: 56 * ui,
         padding: EdgeInsets.symmetric(horizontal: 30 * ui),
@@ -902,20 +1054,26 @@ class _EpisodeCard extends StatelessWidget {
         ui: ui,
         radius: 14 * ui,
         unfocusedColor: Colors.white,
+        scale: 1.04,
       ),
       child: Container(
         decoration: BoxDecoration(
+          // 上下渐变：未选中"上粉下白"，选中"上浅粉下深粉"
           gradient: selected
-              ? pinkGradient
+              ? const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [biliPinkLight, biliPinkDeep],
+                )
               : const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0xFFFFFFFF), Color(0xFFFFF0F6)],
+                  colors: [Color(0xFFFFEAF3), Colors.white],
                 ),
           borderRadius: BorderRadius.circular(14 * ui),
           boxShadow: [
             BoxShadow(
-              color: biliPink.withValues(alpha: selected ? 0.32 : 0.08),
+              color: biliPink.withValues(alpha: selected ? 0.32 : 0.10),
               blurRadius: selected ? 14 * ui : 8 * ui,
               offset: Offset(0, 4 * ui),
             ),
@@ -939,7 +1097,7 @@ class _EpisodeCard extends StatelessWidget {
                       Icon(
                         Icons.play_arrow_rounded,
                         color: Colors.white,
-                        size: 20 * ui,
+                        size: 30 * ui,
                       ),
                       SizedBox(width: 2 * ui),
                     ],

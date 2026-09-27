@@ -1,8 +1,8 @@
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/utils/ui_scale.dart';
-import 'package:bilitv/widgets/bilibili_image.dart';
-import 'package:bilitv/widgets/video_card.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/utils/ui_scale.dart';
+import 'package:blt/widgets/bilibili_image.dart';
+import 'package:blt/widgets/video_card.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -65,16 +65,60 @@ void main() {
       find.byType(BilibiliMediaThumbnail).first,
     );
 
-    expect(homeCard.width / homeCard.height, closeTo(1.2, 1e-6));
-    expect(relatedCard.width / relatedCard.height, closeTo(1.2, 1e-6));
-    // 封面固定16:10，且只被2ui的焦点描边内缩
+    expect(
+      homeCard.width / homeCard.height,
+      closeTo(videoCardAspectRatio, 1e-6),
+    );
+    expect(
+      relatedCard.width / relatedCard.height,
+      closeTo(videoCardAspectRatio, 1e-6),
+    );
+    // 封面固定16:9，且只被3ui的焦点描边内缩
     for (final (card, cover) in [
       (homeCard, homeCover),
       (relatedCard, relatedCover),
     ]) {
-      expect(cover.width, closeTo(card.width - 4, 1e-6));
-      expect(cover.width / cover.height, closeTo(16 / 10, 1e-6));
+      expect(cover.width, closeTo(card.width - 6, 1e-6));
+      expect(cover.width / cover.height, closeTo(16 / 9, 1e-6));
     }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('封面角标随卡片宽度缩放，窄卡片角标同比缩小', (tester) async {
+    _setScreen(tester, const Size(1920, 1080));
+
+    Future<double> upNameFontSize(double width, {double ui = 1}) async {
+      await tester.pumpWidget(
+        _host(
+          ui: ui,
+          child: Center(
+            child: SizedBox(
+              width: width,
+              height: width / videoCardAspectRatio,
+              child: VideoCard(video: _fakeVideo()),
+            ),
+          ),
+        ),
+      );
+      final text = tester.widget<Text>(find.text('测试UP主'));
+      return text.style!.fontSize!;
+    }
+
+    // 主页卡片宽度（约551）与相关推荐卡片宽度（约323）
+    final home = await upNameFontSize(550);
+    final related = await upNameFontSize(323);
+    // 大卡片角标不跟着放大，保持基准字号
+    final huge = await upNameFontSize(1200);
+
+    expect(home, closeTo(24, 1e-6));
+    expect(related / home, closeTo(0.7, 0.02));
+    expect(huge, closeTo(24, 1e-6));
+
+    // 缩放下角标仍按"卡片宽度 / 该 ui 的设计宽度"缩放（720p 主页卡片约275）
+    final halfHome = await upNameFontSize(275, ui: 0.5);
+    final halfRelated = await upNameFontSize(161, ui: 0.5);
+    expect(halfHome, closeTo(12, 1e-6));
+    expect(halfRelated / halfHome, closeTo(0.7, 0.02));
     expect(tester.takeException(), isNull);
   });
 

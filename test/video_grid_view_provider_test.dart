@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:bilitv/models/video.dart';
-import 'package:bilitv/widgets/video_grid_view.dart';
+import 'package:blt/models/video.dart';
+import 'package:blt/widgets/video_grid_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 MediaCardInfo _video(int avid) => MediaCardInfo(
@@ -77,6 +77,55 @@ void main() {
 
       expect(calls, 1);
       expect(maxConcurrent, 1);
+      provider.dispose();
+    });
+
+    test('首屏失败后重试重跑首屏请求', () async {
+      final calls = <bool>[];
+      var fail = true;
+      final provider = VideoGridViewProvider(
+        onLoad: ({bool isFetchMore = false}) async {
+          calls.add(isFetchMore);
+          if (fail) throw Exception('network');
+          return ([_video(1)], false);
+        },
+      );
+
+      await provider.refresh();
+      expect(provider.isEmpty, isTrue);
+
+      fail = false;
+      await provider.retry();
+
+      expect(calls, [false, false]);
+      expect(provider.length, 1);
+      provider.dispose();
+    });
+
+    test('加载更多失败后重试重跑翻页请求，且不丢失已有数据', () async {
+      final calls = <bool>[];
+      var fail = false;
+      final provider = VideoGridViewProvider(
+        onLoad: ({bool isFetchMore = false}) async {
+          calls.add(isFetchMore);
+          if (fail) throw Exception('network');
+          return ([_video(calls.length)], true);
+        },
+      );
+
+      await provider.refresh();
+      expect(provider.length, 1);
+
+      fail = true;
+      await provider.fetchData(isFetchMore: true);
+      // 失败不清空已加载的数据
+      expect(provider.length, 1);
+
+      fail = false;
+      await provider.retry();
+
+      expect(calls, [false, true, true]);
+      expect(provider.length, 2);
       provider.dispose();
     });
   });
