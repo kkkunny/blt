@@ -1,3 +1,4 @@
+import 'package:blt/consts/color.dart';
 import 'package:blt/consts/settings.dart';
 import 'package:blt/utils/ui_scale.dart';
 import 'package:blt/widgets/player_controls.dart';
@@ -156,8 +157,9 @@ Widget _layer({
   required List<String> taps,
   bool playing = false,
   bool visible = true,
+  String title = '测试视频标题',
 }) => PlayerControlLayer(
-  title: '测试视频标题',
+  title: title,
   uploader: '测试UP主',
   avatar: 'https://example.invalid/avatar.jpg',
   visible: visible,
@@ -259,6 +261,156 @@ void main() {
     expect(iconOf(PlayerControlKind.prevEpisode).size, 58);
     expect(iconOf(PlayerControlKind.nextEpisode).size, 58);
     expect(iconOf(PlayerControlKind.quality).size, 44);
+  });
+
+  testWidgets('底栏控件聚焦时焦点框包含图标、标题与副标题', (tester) async {
+    _setScreen(tester, const Size(1920, 1080));
+    final panelVisible = ValueNotifier(false);
+    addTearDown(panelVisible.dispose);
+    await tester.pumpWidget(
+      _host(
+        ui: 1,
+        child: _layer(panelVisible: panelVisible, taps: []),
+      ),
+    );
+
+    final root = find.byKey(const ValueKey('bar-quality'));
+    final label = find.descendant(of: root, matching: find.text('清晰度'));
+    final value = find.descendant(of: root, matching: find.text('720P 高清'));
+    final icon = find.descendant(of: root, matching: find.byType(Icon));
+    // 最近一层 AnimatedContainer 即 buildPinkFocusEffect 的焦点框
+    final effect = find
+        .ancestor(of: label, matching: find.byType(AnimatedContainer))
+        .first;
+
+    BoxDecoration decorationOf() =>
+        tester.widget<AnimatedContainer>(effect).decoration! as BoxDecoration;
+
+    // 未聚焦时无粉色描边
+    expect(decorationOf().border!.top.color, Colors.transparent);
+
+    _focusOf(tester, label).requestFocus();
+    await tester.pump();
+
+    expect(decorationOf().border!.top.color, biliPink);
+    final effectRect = tester.getRect(effect);
+    for (final inner in [icon, label, value]) {
+      final rect = tester.getRect(inner);
+      expect(
+        effectRect.left <= rect.left &&
+            effectRect.top <= rect.top &&
+            effectRect.right >= rect.right &&
+            effectRect.bottom >= rect.bottom,
+        isTrue,
+        reason: '焦点框 $effectRect 未包住 $rect',
+      );
+    }
+  });
+
+  testWidgets('底栏控件图标与文字纵向对齐', (tester) async {
+    _setScreen(tester, const Size(1920, 1080));
+    final panelVisible = ValueNotifier(false);
+    addTearDown(panelVisible.dispose);
+    await tester.pumpWidget(
+      _host(
+        ui: 1,
+        child: _layer(panelVisible: panelVisible, taps: []),
+      ),
+    );
+
+    double topOf(PlayerControlKind kind, String text) => tester
+        .getRect(
+          find.descendant(
+            of: find.byKey(ValueKey('bar-${kind.name}')),
+            matching: find.text(text),
+          ),
+        )
+        .top;
+    double iconCenterOf(PlayerControlKind kind) => tester
+        .getRect(
+          find.descendant(
+            of: find.byKey(ValueKey('bar-${kind.name}')),
+            matching: find.byType(Icon),
+          ),
+        )
+        .center
+        .dy;
+
+    const labeled = <(PlayerControlKind, String)>[
+      (PlayerControlKind.prevEpisode, '上一集'),
+      (PlayerControlKind.nextEpisode, '下一集'),
+      (PlayerControlKind.quality, '清晰度'),
+      (PlayerControlKind.rate, '倍速'),
+      (PlayerControlKind.audio, '音轨'),
+      (PlayerControlKind.danmaku, '弹幕'),
+      (PlayerControlKind.aspect, '画面比例'),
+      (PlayerControlKind.loop, '循环播放'),
+      (PlayerControlKind.moreSettings, '更多设置'),
+    ];
+    const valued = <(PlayerControlKind, String)>[
+      (PlayerControlKind.quality, '720P 高清'),
+      (PlayerControlKind.rate, '1.0x'),
+      (PlayerControlKind.audio, '默认'),
+      (PlayerControlKind.danmaku, '开'),
+      (PlayerControlKind.aspect, '适应'),
+      (PlayerControlKind.loop, '不循环'),
+    ];
+
+    final iconCenters = [for (final (kind, _) in labeled) iconCenterOf(kind)];
+    final labelTops = [for (final (kind, label) in labeled) topOf(kind, label)];
+    final valueTops = [for (final (kind, value) in valued) topOf(kind, value)];
+
+    for (final center in iconCenters) {
+      expect(center, closeTo(iconCenters.first, 0.01));
+    }
+    for (final top in labelTops) {
+      expect(top, closeTo(labelTops.first, 0.01));
+    }
+    for (final top in valueTops) {
+      expect(top, closeTo(valueTops.first, 0.01));
+    }
+  });
+
+  testWidgets('设置面板覆盖标题栏，标题排版不变', (tester) async {
+    _setScreen(tester, const Size(1920, 1080));
+    // 85 个全角字符：标题在关闭面板时就是两行
+    const title =
+        '很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题'
+        '很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题很长的视频标题';
+    final panelVisible = ValueNotifier(false);
+    addTearDown(panelVisible.dispose);
+
+    // 单行高度基准
+    await tester.pumpWidget(
+      _host(
+        ui: 1,
+        child: _layer(panelVisible: panelVisible, taps: [], title: '短标题'),
+      ),
+    );
+    final singleLine = tester.getRect(find.text('短标题')).height;
+
+    await tester.pumpWidget(
+      _host(
+        ui: 1,
+        child: _layer(panelVisible: panelVisible, taps: [], title: title),
+      ),
+    );
+
+    final closed = tester.getRect(find.text(title));
+    expect(closed.height, closeTo(singleLine * 2, 1), reason: '标题前提是两行');
+
+    panelVisible.value = true;
+    await tester.pump();
+
+    final open = tester.getRect(find.text(title));
+    expect(open.left, closeTo(closed.left, 0.01));
+    expect(open.top, closeTo(closed.top, 0.01));
+    expect(open.width, closeTo(closed.width, 0.01));
+    expect(open.height, closeTo(closed.height, 0.01));
+
+    // 面板覆盖在标题上方：两者水平区间有重叠，而不是把标题挤窄
+    final panelRect = tester.getRect(find.byType(PlayerSettingsPanel));
+    expect(open.right, greaterThan(panelRect.left));
   });
 
   testWidgets('选中底栏控件触发回调', (tester) async {
