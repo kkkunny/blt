@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 // 统一的粉色选中特效：粉色描边 + 粉色光晕（描边宽度恒定，避免选中时布局位移）
 //
 // [radius]、[borderWidth] 均由调用方按 ui 缩放传入；
-// 描边宽度为空时按 2 * ui，且最小1逻辑像素，避免低分辨率下消失。
+// 描边宽度为空时按 3 * ui，且最小1逻辑像素，避免低分辨率下消失。
+//
+// [focusedBackgroundColor] 用于切换选中态底色（例如浅灰底 -> 白底）；
+// [scale] > 1 时选中项会轻微放大（Transform 不影响布局），用来强化焦点位置。
+// 光晕只绘制在元素外侧，不会污染透明底控件的内部。
 Widget buildPinkFocusEffect({
   required double ui,
   required double radius,
@@ -16,28 +20,121 @@ Widget buildPinkFocusEffect({
   double? borderWidth,
   Color unfocusedColor = Colors.transparent,
   Color? backgroundColor,
+  Color? focusedBackgroundColor,
+  double scale = 1.0,
 }) {
-  return AnimatedContainer(
+  final effect = AnimatedContainer(
     duration: const Duration(milliseconds: 150),
     decoration: BoxDecoration(
-      color: backgroundColor,
+      color: isFocused
+          ? (focusedBackgroundColor ?? backgroundColor)
+          : backgroundColor,
       borderRadius: BorderRadius.circular(radius),
       border: Border.all(
         color: isFocused ? biliPink : unfocusedColor,
-        width: math.max(1.0, borderWidth ?? 2 * ui),
+        width: math.max(1.0, borderWidth ?? 3 * ui),
       ),
-      boxShadow: isFocused
-          ? [
-              BoxShadow(
-                color: biliPink.withValues(alpha: 0.5),
-                blurRadius: 18 * ui,
-                spreadRadius: 3 * ui,
-              ),
-            ]
-          : null,
     ),
     child: child,
   );
+  final halo = _FocusHalo(
+    ui: ui,
+    radius: radius,
+    isFocused: isFocused,
+    child: effect,
+  );
+  if (scale == 1.0) return halo;
+  return AnimatedScale(
+    duration: const Duration(milliseconds: 150),
+    curve: Curves.easeOut,
+    scale: isFocused ? scale : 1.0,
+    child: halo,
+  );
+}
+
+// 焦点光晕：用"描边 + 模糊"绘制在元素外侧。
+//
+// 不用 BoxShadow 是因为它会把光晕填充到元素内部，
+// 透明底控件（设置项、侧边栏图标等）会被染成一片粉色；
+// 描边路径只覆盖边框附近，内部保持干净。
+class _FocusHalo extends StatelessWidget {
+  final double ui;
+  final double radius;
+  final bool isFocused;
+  final Widget child;
+
+  const _FocusHalo({
+    required this.ui,
+    required this.radius,
+    required this.isFocused,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: isFocused ? 1 : 0),
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeOut,
+      builder: (context, progress, child) => CustomPaint(
+        painter: _FocusHaloPainter(
+          progress: progress,
+          ui: ui,
+          radius: radius,
+        ),
+        child: child,
+      ),
+      child: child,
+    );
+  }
+}
+
+class _FocusHaloPainter extends CustomPainter {
+  final double progress;
+  final double ui;
+  final double radius;
+
+  const _FocusHaloPainter({
+    required this.progress,
+    required this.ui,
+    required this.radius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress <= 0 || size.isEmpty) return;
+    // 光晕半径与元素尺寸挂钩：小卡片用小的光晕，才能画在列表视口的留白内不被裁掉；
+    // 10~16ui 的上下限保证按钮等小控件也有足够明显的聚焦光晕。
+    final halo = (size.shortestSide * 0.025).clamp(10 * ui, 16 * ui);
+    final rrect = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(radius),
+    );
+    // 近处强光，勾出焦点轮廓（可见范围约等于 halo）
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.7 * halo
+        ..color = biliPink.withValues(alpha: 0.5 * progress)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 0.35 * halo),
+    );
+    // 远处柔光，让选中项"浮"起来
+    canvas.drawRRect(
+      rrect.inflate(0.5 * halo),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.0 * halo
+        ..color = biliPink.withValues(alpha: 0.16 * progress)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 0.8 * halo),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_FocusHaloPainter oldDelegate) =>
+      oldDelegate.progress != progress ||
+      oldDelegate.ui != ui ||
+      oldDelegate.radius != radius;
 }
 
 // 统一的粉色选中特效（DpadFocusable builder）
@@ -47,6 +144,8 @@ FocusEffectBuilder pinkFocusEffect({
   double? borderWidth,
   Color unfocusedColor = Colors.transparent,
   Color? backgroundColor,
+  Color? focusedBackgroundColor,
+  double scale = 1.0,
 }) {
   return (context, isFocused, child) => buildPinkFocusEffect(
     ui: ui,
@@ -55,9 +154,14 @@ FocusEffectBuilder pinkFocusEffect({
     borderWidth: borderWidth,
     unfocusedColor: unfocusedColor,
     backgroundColor: backgroundColor,
+    focusedBackgroundColor: focusedBackgroundColor,
+    scale: scale,
     child: child ?? const SizedBox.shrink(),
   );
 }
+
+// 可聚焦的小控件底色（浅粉，与页面粉色主题呼应），焦点态由 focusedBackgroundColor 切到白色
+const focusableSurfaceColor = Color(0xFFFFF0F6);
 
 // 白色半透明圆角面板
 class PinkPanel extends StatelessWidget {
@@ -150,7 +254,7 @@ class PinkButton extends StatelessWidget {
       onTap: onPressed,
       child: DpadFocusable(
         onSelect: onPressed,
-        builder: pinkFocusEffect(ui: ui, radius: 28 * ui),
+        builder: pinkFocusEffect(ui: ui, radius: 28 * ui, scale: 1.04),
         child: Container(
           height: 56 * ui,
           padding: EdgeInsets.symmetric(horizontal: 30 * ui),
