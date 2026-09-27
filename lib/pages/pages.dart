@@ -67,7 +67,7 @@ class _PageState extends State<Page> {
       _PageItem(
         icon: IconFont.search,
         label: '搜索',
-        child: (listener) => SearchPage(),
+        child: (listener) => SearchPage(tappedListener: listener),
       ),
       _PageItem(
         icon: IconFont.history,

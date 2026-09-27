@@ -1,6 +1,10 @@
+import 'package:blt/models/video.dart';
 import 'package:blt/widgets/video_grid_view.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'helpers/page_test_env.dart';
 
 SliverGridRegularTileLayout _layoutOf(
   SliverGridDelegate delegate, {
@@ -97,6 +101,64 @@ void main() {
             .maxCrossAxisExtent,
         1200,
       );
+    });
+  });
+
+  group('VideoGridView 挂载行为', () {
+    MediaCardInfo video(int avid) => MediaCardInfo(
+      type: MediaType.video,
+      avid: avid,
+      bvid: 'BV$avid',
+      title: '视频$avid',
+      cover: '',
+      duration: const Duration(seconds: 10),
+      userMid: 1,
+      userName: 'up',
+      userAvatar: '',
+      publishTime: DateTime.fromMillisecondsSinceEpoch(0),
+    );
+
+    testWidgets('默认挂载即加载首屏', (tester) async {
+      var calls = 0;
+      final provider = VideoGridViewProvider(
+        onLoad: ({bool isFetchMore = false}) async {
+          calls++;
+          return ([video(1)], false);
+        },
+      );
+
+      await pumpPage(
+        tester,
+        SizedBox(height: 800, child: VideoGridView(provider: provider)),
+      );
+      await tester.pump();
+
+      expect(calls, 1);
+      // 排空分页组件内部的延迟滚动定时器
+      await tester.pump(const Duration(seconds: 1));
+      provider.dispose();
+    });
+
+    testWidgets('autoRefresh=false 时由页面自己控制首屏', (tester) async {
+      var calls = 0;
+      final provider = VideoGridViewProvider(
+        onLoad: ({bool isFetchMore = false}) async {
+          calls++;
+          return ([video(1)], false);
+        },
+      );
+
+      await pumpPage(
+        tester,
+        SizedBox(
+          height: 800,
+          child: VideoGridView(provider: provider, autoRefresh: false),
+        ),
+      );
+      await tester.pump();
+
+      expect(calls, 0);
+      provider.dispose();
     });
   });
 }

@@ -238,6 +238,8 @@ class PinkButton extends StatelessWidget {
   final String label;
   final IconData? icon;
   final VoidCallback onPressed;
+  final double height; // 设计尺寸，圆角默认取高度一半
+  final bool autofocus;
 
   const PinkButton({
     super.key,
@@ -245,22 +247,26 @@ class PinkButton extends StatelessWidget {
     required this.label,
     this.icon,
     required this.onPressed,
+    this.height = 56,
+    this.autofocus = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final radius = height / 2 * ui;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onPressed,
       child: DpadFocusable(
+        autofocus: autofocus,
         onSelect: onPressed,
-        builder: pinkFocusEffect(ui: ui, radius: 28 * ui, scale: 1.04),
+        builder: pinkFocusEffect(ui: ui, radius: radius, scale: 1.04),
         child: Container(
-          height: 56 * ui,
+          height: height * ui,
           padding: EdgeInsets.symmetric(horizontal: 30 * ui),
           decoration: BoxDecoration(
             gradient: pinkGradient,
-            borderRadius: BorderRadius.circular(28 * ui),
+            borderRadius: BorderRadius.circular(radius),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
